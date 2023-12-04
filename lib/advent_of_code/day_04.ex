@@ -6,7 +6,7 @@ defmodule AdventOfCode.Day04 do
     args
     |> String.split("\n", trim: true)
     |> Enum.map(fn card ->
-      ["Card " <> card, values] = String.split(card, ": ", trim: true)
+      [_, values] = String.split(card, ": ", trim: true)
       [winning, other] = String.split(values, "|", trim: true)
       winning_numbers = String.split(winning, " ", trim: true)
       my_numbers = String.split(other, " ", trim: true)
@@ -51,7 +51,7 @@ defmodule AdventOfCode.Day04 do
     process_cards(cards, cards, length(cards))
   end
 
-  def process_cards([], all_cards, total), do: total
+  def process_cards([], _all_cards, total), do: total
 
   def process_cards(cards_to_process, all_cards, total) do
     {new_cards, total} =

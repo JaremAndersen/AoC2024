@@ -1,7 +1,64 @@
 defmodule AdventOfCode.Day02 do
-  def part1(_args) do
+  @bag_contents %{
+    "blue" => 14,
+    "green" => 13,
+    "red" => 12
+  }
+
+  @empty_bag_contents %{
+    "blue" => 0,
+    "green" => 0,
+    "red" => 0
+  }
+
+  def part1(args) do
+    String.split(args, "\n", trim: true)
+    |> IO.inspect()
+    |> Enum.map(fn line ->
+      ["Game " <> id, results] = String.split(line, ": ", trim: true)
+
+      valid? =
+        String.split(results, "; ", trim: true)
+        |> Enum.all?(fn draw ->
+          String.split(draw, ",", trim: true)
+          |> Enum.all?(fn draw ->
+            [count, color] = String.split(draw, " ", trim: true)
+            String.to_integer(count) <= Map.get(@bag_contents, color)
+          end)
+        end)
+
+      if valid? do
+        String.to_integer(id)
+      else
+        0
+      end
+    end)
+    |> Enum.sum()
   end
 
-  def part2(_args) do
+  def part2(args) do
+    String.split(args, "\n", trim: true)
+    |> IO.inspect()
+    |> Enum.map(fn line ->
+      ["Game " <> id, results] = String.split(line, ": ", trim: true)
+
+      min_bag =
+        String.split(results, "; ", trim: true)
+        |> Enum.reduce(@empty_bag_contents, fn draw, acc ->
+          String.split(draw, ",", trim: true)
+          |> Enum.reduce(acc, fn draw, acc2 ->
+            [count, color] = String.split(draw, " ", trim: true)
+
+            if String.to_integer(count) > Map.get(acc2, color) do
+              Map.put(acc2, color, String.to_integer(count))
+            else
+              acc2
+            end
+          end)
+        end)
+
+      min_bag["red"] * min_bag["green"] * min_bag["blue"]
+    end)
+    |> Enum.sum()
   end
 end

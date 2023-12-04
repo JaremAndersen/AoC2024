@@ -13,7 +13,6 @@ defmodule AdventOfCode.Day02 do
 
   def part1(args) do
     String.split(args, "\n", trim: true)
-    |> IO.inspect()
     |> Enum.map(fn line ->
       ["Game " <> id, results] = String.split(line, ": ", trim: true)
 
@@ -38,7 +37,6 @@ defmodule AdventOfCode.Day02 do
 
   def part2(args) do
     String.split(args, "\n", trim: true)
-    |> IO.inspect()
     |> Enum.map(fn line ->
       ["Game " <> id, results] = String.split(line, ": ", trim: true)
 
@@ -49,11 +47,7 @@ defmodule AdventOfCode.Day02 do
           |> Enum.reduce(acc, fn draw, acc2 ->
             [count, color] = String.split(draw, " ", trim: true)
 
-            if String.to_integer(count) > Map.get(acc2, color) do
-              Map.put(acc2, color, String.to_integer(count))
-            else
-              acc2
-            end
+            Map.put(acc2, color, max(String.to_integer(count), Map.get(acc2, color)))
           end)
         end)
 

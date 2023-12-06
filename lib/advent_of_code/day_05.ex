@@ -39,23 +39,15 @@ defmodule AdventOfCode.Day05 do
         end
       end)
 
-    IO.inspect(maps, label: "maps")
-
     Map.get(maps, :seeds)
     |> Enum.map(fn seed ->
-      IO.inspect(seed, label: "seed")
-      soil = find_location(seed, maps.seed_to_soil) |> IO.inspect(label: "soil")
-      fertilizer = find_location(soil, maps.soil_to_fertilizer) |> IO.inspect(label: "fertilizer")
-      water = find_location(fertilizer, maps.fertilizer_to_water) |> IO.inspect(label: "water")
-      light = find_location(water, maps.water_to_light) |> IO.inspect(label: "light")
-
-      temperature =
-        find_location(light, maps.light_to_temperature) |> IO.inspect(label: "temperature")
-
-      humidity =
-        find_location(temperature, maps.temperature_to_humidity) |> IO.inspect(label: "humidity")
-
-      find_location(humidity, maps.humidity_to_location) |> IO.inspect(label: "location")
+      find_location(seed, maps.seed_to_soil)
+      |> find_location(maps.soil_to_fertilizer)
+      |> find_location(maps.fertilizer_to_water)
+      |> find_location(maps.water_to_light)
+      |> find_location(maps.light_to_temperature)
+      |> find_location(maps.temperature_to_humidity)
+      |> find_location(maps.humidity_to_location)
     end)
     |> Enum.min()
   end
@@ -124,13 +116,13 @@ defmodule AdventOfCode.Day05 do
 
     Map.get(maps, :seeds)
     |> Enum.map(fn {seed_start, seed_end} ->
-      soil_ranges = find_location2([{seed_start, seed_end}], maps.seed_to_soil, [])
-      fertilizer_ranges = find_location2(soil_ranges, maps.soil_to_fertilizer, [])
-      water_ranges = find_location2(fertilizer_ranges, maps.fertilizer_to_water, [])
-      light_ranges = find_location2(water_ranges, maps.water_to_light, [])
-      temperature_ranges = find_location2(light_ranges, maps.light_to_temperature, [])
-      humidity_ranges = find_location2(temperature_ranges, maps.temperature_to_humidity, [])
-      find_location2(humidity_ranges, maps.humidity_to_location, [])
+      find_location2([{seed_start, seed_end}], maps.seed_to_soil, [])
+      |> find_location2(maps.soil_to_fertilizer, [])
+      |> find_location2(maps.fertilizer_to_water, [])
+      |> find_location2(maps.water_to_light, [])
+      |> find_location2(maps.light_to_temperature, [])
+      |> find_location2(maps.temperature_to_humidity, [])
+      |> find_location2(maps.humidity_to_location, [])
     end)
     |> List.flatten()
     |> Enum.map(fn {start, _end} ->
